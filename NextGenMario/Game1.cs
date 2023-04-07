@@ -9,6 +9,20 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
+    // Declare window size
+    const int WINDOW_WIDTH = 1280;
+    const int WINDOW_HEIGHT = 720;
+
+    // Create reference for the ball and the background 
+    Texture2D ball;
+    Texture2D background;
+
+    // Create reference for the custom text font
+    SpriteFont gameFont;
+
+    // Declare player
+    Player player = new Player();
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -19,7 +33,10 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
+        // Initialize the game window size
+        _graphics.PreferredBackBufferWidth = WINDOW_WIDTH;
+        _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
+        _graphics.ApplyChanges();
 
         base.Initialize();
     }
@@ -28,7 +45,12 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // TODO: use this.Content to load your game content here
+        // Load the ball and the background
+        ball = Content.Load<Texture2D>("ball");
+        background = Content.Load<Texture2D>("Background");
+
+        // Load sprite font
+        gameFont = Content.Load<SpriteFont>("DefaultFont");
     }
 
     protected override void Update(GameTime gameTime)
@@ -36,7 +58,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        player.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -45,7 +67,12 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
-        // TODO: Add your drawing code here
+        // Render cycle (draw order matters)
+        _spriteBatch.Begin();
+        _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+        _spriteBatch.Draw(ball, player.Position, Color.White);
+        _spriteBatch.DrawString(gameFont, "Test Message - Sprite Font Test", new Vector2(0,0), Color.Chocolate);
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }
