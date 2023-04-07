@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,8 +24,9 @@ public class Game1 : Game
     // Create reference for the custom text font
     SpriteFont gameFont;
 
-    // Declare camera
+    // Declare camera and hold a reference for the player
     Camera camera;
+    Player player;
 
     public Game1()
     {
@@ -123,7 +124,7 @@ public class Game1 : Game
             sprite.Update(gameTime, _sprites);
 
         // Handle camera update (camera follows the player)
-        camera.Position = player.Position;
+        camera.Position = player.position;
         camera.Update(gameTime);
 
         base.Update(gameTime);
