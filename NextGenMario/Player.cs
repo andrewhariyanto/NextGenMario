@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,16 +17,13 @@ enum Direction
     Right
 }
 
-public class Player
+public class Player : Sprite
 {
-    private Vector2 position = new Vector2(500, 300);
-    private int speed = 300;
     private Direction direction = Direction.Right;
     private bool isMoving = false;
 
-    public Vector2 Position
+    public Player(Texture2D texture) : base(texture)
     {
-        get { return position; }
     }
 
     public void setX(float newX)
@@ -38,7 +36,7 @@ public class Player
         position.Y = newY;
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime, List<Sprite> _sprites)
     {
         KeyboardState kState = Keyboard.GetState();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -51,6 +49,7 @@ public class Player
         {
             direction = Direction.Left;
             isMoving = true;
+            velocity.X = -speed * deltaTime;
         }
 
         // Right 
@@ -58,12 +57,14 @@ public class Player
         {
             direction = Direction.Right;
             isMoving = true;
+            velocity.X = speed * deltaTime;
         }
 
         // Up
         if (kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.W))
         {
             direction = Direction.Up;
+            velocity.Y = -speed * deltaTime;
             isMoving = true;
         }
 
@@ -71,6 +72,8 @@ public class Player
         if ((kState.IsKeyDown(Keys.Up) && kState.IsKeyDown(Keys.Left)) || (kState.IsKeyDown(Keys.W) && kState.IsKeyDown(Keys.A)))
         {
             direction = Direction.UpLeft;
+            velocity.Y = -speed * deltaTime;
+            velocity.X = -speed * deltaTime;
             isMoving = true;
         }
 
@@ -78,6 +81,8 @@ public class Player
         if ((kState.IsKeyDown(Keys.Up) && kState.IsKeyDown(Keys.Right)) || (kState.IsKeyDown(Keys.W) && kState.IsKeyDown(Keys.D)))
         {
             direction = Direction.UpRight;
+            velocity.Y = -speed * deltaTime;
+            velocity.X = speed * deltaTime;
             isMoving = true;
         }
 
@@ -86,12 +91,15 @@ public class Player
         {
             direction = Direction.Down;
             isMoving = true;
+            velocity.Y = speed * deltaTime;
         }
 
         // Down Left
         if ((kState.IsKeyDown(Keys.Down) && kState.IsKeyDown(Keys.Left)) || (kState.IsKeyDown(Keys.S) && kState.IsKeyDown(Keys.A)))
         {
             direction = Direction.DownLeft;
+            velocity.Y = speed * deltaTime;
+            velocity.X = -speed * deltaTime;
             isMoving = true;
         }
 
@@ -99,7 +107,19 @@ public class Player
         if ((kState.IsKeyDown(Keys.Down) && kState.IsKeyDown(Keys.Right)) || (kState.IsKeyDown(Keys.S) && kState.IsKeyDown(Keys.D)))
         {
             direction = Direction.DownRight;
+            velocity.Y = speed * deltaTime;
+            velocity.X = speed * deltaTime;
             isMoving = true;
+        }
+
+        foreach(var sprite in _sprites){
+            if(sprite == this)
+                continue;
+            
+            if((this.velocity.X > 0 && this.isTouchingLeft(sprite)) || (this.velocity.X < 0 && this.isTouchingRight(sprite)))
+                this.velocity.X = 0;
+            if((this.velocity.Y > 0 && this.isTouchingTop(sprite)) || (this.velocity.Y < 0 && this.isTouchingBottom(sprite)))
+                this.velocity.Y = 0;
         }
 
         if (isMoving)
@@ -107,41 +127,43 @@ public class Player
             switch (direction)
             {
                 case Direction.Left:
-                    position.X -= speed * deltaTime;
+                    position.X += velocity.X;
                     break;
 
                 case Direction.Right:
-                    position.X += speed * deltaTime;
+                    position.X += velocity.X;
                     break;
 
                 case Direction.Up:
-                    position.Y -= speed * deltaTime;
+                    position.Y += velocity.Y;
                     break;
 
                 case Direction.UpLeft:
-                    position.Y -= speed * 0.7f * deltaTime;
-                    position.X -= speed * 0.7f * deltaTime;
+                    position.Y += velocity.Y * 0.7f;
+                    position.X += velocity.X * 0.7f;
                     break;
 
                 case Direction.UpRight:
-                    position.Y -= speed * 0.7f * deltaTime;
-                    position.X += speed * 0.7f * deltaTime;
+                    position.Y += velocity.Y * 0.7f;
+                    position.X += velocity.X * 0.7f;
                     break;
 
                 case Direction.Down:
-                    position.Y += speed * deltaTime;
+                    position.Y += velocity.Y;
                     break;
 
                 case Direction.DownLeft:
-                    position.Y += speed * 0.7f * deltaTime;
-                    position.X -= speed * 0.7f * deltaTime;
+                    position.Y += velocity.Y * 0.7f;
+                    position.X += velocity.X * 0.7f;
                     break;
 
                 case Direction.DownRight:
-                    position.Y += speed * 0.7f * deltaTime;
-                    position.X += speed * 0.7f * deltaTime;
+                    position.Y += velocity.Y * 0.7f;
+                    position.X += velocity.X * 0.7f;
                     break;
             }
         }
+        
+        velocity = Vector2.Zero;
     }
 }
