@@ -4,20 +4,23 @@ using Microsoft.Xna.Framework.Input;
 
 namespace NextGenMario;
 
-enum MovementState
+enum Direction
 {
-    Crouch,
-    Jump,
-    MoveLeft,
-    MoveRight,
-    Idle
+    Down,
+    DownLeft,
+    DownRight,
+    Up,
+    UpLeft,
+    UpRight,
+    Left,
+    Right
 }
 
 public class Player
 {
     private Vector2 position = new Vector2(500, 300);
     private int speed = 300;
-    private MovementState movement = MovementState.Idle;
+    private Direction direction = Direction.Right;
     private bool isMoving = false;
 
     public Vector2 Position
@@ -43,49 +46,100 @@ public class Player
         // Every frame reset the moving condition
         isMoving = false;
 
-        if (kState.IsKeyDown(Keys.Right) || kState.IsKeyDown(Keys.D))
-        {
-            movement = MovementState.MoveRight;
-            isMoving = true;
-        }
-
+        // Left
         if (kState.IsKeyDown(Keys.Left) || kState.IsKeyDown(Keys.A))
         {
-            movement = MovementState.MoveLeft;
+            direction = Direction.Left;
             isMoving = true;
         }
 
-        if (kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.W) || kState.IsKeyDown(Keys.Space))
+        // Right 
+        if (kState.IsKeyDown(Keys.Right) || kState.IsKeyDown(Keys.D))
         {
-            movement = MovementState.Jump;
+            direction = Direction.Right;
             isMoving = true;
         }
 
+        // Up
+        if (kState.IsKeyDown(Keys.Up) || kState.IsKeyDown(Keys.W))
+        {
+            direction = Direction.Up;
+            isMoving = true;
+        }
+
+        // Up Left
+        if ((kState.IsKeyDown(Keys.Up) && kState.IsKeyDown(Keys.Left)) || (kState.IsKeyDown(Keys.W) && kState.IsKeyDown(Keys.A)))
+        {
+            direction = Direction.UpLeft;
+            isMoving = true;
+        }
+
+        // Up Right
+        if ((kState.IsKeyDown(Keys.Up) && kState.IsKeyDown(Keys.Right)) || (kState.IsKeyDown(Keys.W) && kState.IsKeyDown(Keys.D)))
+        {
+            direction = Direction.UpRight;
+            isMoving = true;
+        }
+
+        // Down
         if (kState.IsKeyDown(Keys.Down) || kState.IsKeyDown(Keys.S))
         {
-            movement = MovementState.Crouch;
+            direction = Direction.Down;
+            isMoving = true;
+        }
+
+        // Down Left
+        if ((kState.IsKeyDown(Keys.Down) && kState.IsKeyDown(Keys.Left)) || (kState.IsKeyDown(Keys.S) && kState.IsKeyDown(Keys.A)))
+        {
+            direction = Direction.DownLeft;
+            isMoving = true;
+        }
+
+        // Down Right
+        if ((kState.IsKeyDown(Keys.Down) && kState.IsKeyDown(Keys.Right)) || (kState.IsKeyDown(Keys.S) && kState.IsKeyDown(Keys.D)))
+        {
+            direction = Direction.DownRight;
             isMoving = true;
         }
 
         if (isMoving)
         {
-            switch (movement)
+            switch (direction)
             {
-                case MovementState.MoveRight:
-                    position.X += speed * deltaTime;
-                    break;
-
-                case MovementState.MoveLeft:
+                case Direction.Left:
                     position.X -= speed * deltaTime;
                     break;
 
-                case MovementState.Crouch:
-                    // This is not what we want, but for testing the player will just go down so that we can move around first
+                case Direction.Right:
+                    position.X += speed * deltaTime;
+                    break;
+
+                case Direction.Up:
+                    position.Y -= speed * deltaTime;
+                    break;
+
+                case Direction.UpLeft:
+                    position.Y -= speed * 0.7f * deltaTime;
+                    position.X -= speed * 0.7f * deltaTime;
+                    break;
+
+                case Direction.UpRight:
+                    position.Y -= speed * 0.7f * deltaTime;
+                    position.X += speed * 0.7f * deltaTime;
+                    break;
+
+                case Direction.Down:
                     position.Y += speed * deltaTime;
                     break;
 
-                case MovementState.Jump:
-                    position.Y -= speed * deltaTime;
+                case Direction.DownLeft:
+                    position.Y += speed * 0.7f * deltaTime;
+                    position.X -= speed * 0.7f * deltaTime;
+                    break;
+
+                case Direction.DownRight:
+                    position.Y += speed * 0.7f * deltaTime;
+                    position.X += speed * 0.7f * deltaTime;
                     break;
             }
         }
