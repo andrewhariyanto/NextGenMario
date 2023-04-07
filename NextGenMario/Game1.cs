@@ -13,6 +13,7 @@ public class Game1 : Game
     private List<Sprite> _environmentSprites;
     Texture2D enemyTexture;
     Texture2D enemyTexture1;
+    Texture2D enemyTexture2;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -92,6 +93,18 @@ public class Game1 : Game
                 color = Color.CornflowerBlue,
                 speed = 0f,
             },
+            new Enemy(enemyTexture2)
+            {
+                position = new Vector2(WINDOW_WIDTH - 500, 100),
+                color = Color.CornflowerBlue,
+                speed = 0f,
+            },
+                        new Enemy(enemyTexture2)
+            {
+                position = new Vector2(WINDOW_WIDTH - 900, 200),
+                color = Color.CornflowerBlue,
+                speed = 0f,
+            },
         };
 
         player._environmentSprites = _environmentSprites;
@@ -109,6 +122,7 @@ public class Game1 : Game
         _spriteBatch.Dispose();
         enemyTexture.Dispose();
         enemyTexture1.Dispose();
+        enemyTexture2.Dispose();
     }
 
     protected override void Update(GameTime gameTime)
@@ -145,7 +159,7 @@ public class Game1 : Game
             sprite.Draw(_spriteBatch);
         }
         
-        _spriteBatch.DrawString(gameFont, "Test Message - Sprite Font Test", new Vector2(0,0), Color.Chocolate);
+        _spriteBatch.DrawString(gameFont, "Top-Down Maze", new Vector2(0,0), Color.Chocolate);
 
         
         _spriteBatch.End();

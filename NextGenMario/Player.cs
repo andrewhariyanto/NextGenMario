@@ -25,6 +25,7 @@ public class Player : Sprite
 
     public Player(Texture2D texture) : base(texture)
     {
+        type = "player";
     }
 
     public void setX(float newX)
