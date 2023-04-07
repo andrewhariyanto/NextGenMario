@@ -10,7 +10,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private List<Sprite> _sprites;
+    private List<Sprite> _environmentSprites;
     Texture2D enemyTexture;
     Texture2D enemyTexture1;
 
@@ -54,24 +54,20 @@ public class Game1 : Game
 
         // load the sprites
         var playerTexture = Content.Load<Texture2D>("ball");
-        enemyTexture = new Texture2D(GraphicsDevice, 100, WINDOW_HEIGHT);
-        Color[] data = new Color[100*WINDOW_HEIGHT];
-        for(int i = 0; i < data.Length; i++) data[i] = Color.White;
-        enemyTexture.SetData(data);
 
-        enemyTexture1 = new Texture2D(GraphicsDevice, WINDOW_WIDTH-200, 100);
-        Color[] data1 = new Color[100*(WINDOW_WIDTH-200)];
-        for(int i = 0; i < data1.Length; i++) data1[i] = Color.White;
-        enemyTexture1.SetData(data1);
+        enemyTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
+        enemyTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH-200, 100, Color.White);
 
-        _sprites = new List<Sprite>()
-        {
-            new Player(playerTexture)
+        // Initialize the player
+        player = new Player(playerTexture)
             {
                 position = new Vector2(300, 500),
                 color = Color.Wheat,
                 speed = 300f,
-            },
+            };
+
+        _environmentSprites = new List<Sprite>()
+        {
             new Enemy(enemyTexture)
             {
                 position = new Vector2(0, 0),
@@ -98,6 +94,8 @@ public class Game1 : Game
             },
         };
 
+        player._environmentSprites = _environmentSprites;
+
         // Load the background
         background = Content.Load<Texture2D>("Background");
 
@@ -119,9 +117,10 @@ public class Game1 : Game
             Exit();
 
         // Handle player update
+        player.Update(gameTime);
 
-        foreach( var sprite in _sprites)
-            sprite.Update(gameTime, _sprites);
+        foreach( Sprite sprite in _environmentSprites)
+            sprite.Update(gameTime);
 
         // Handle camera update (camera follows the player)
         camera.Position = player.position;
@@ -135,11 +134,14 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // Render cycle (draw order matters)
-        _spriteBatch.Begin(this.camera);
+        _spriteBatch.Begin();
         _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
+        // Draw the player
+        player.Draw(_spriteBatch);
+
         // draw the sprites
-        foreach(var sprite in _sprites){
+        foreach(Sprite sprite in _environmentSprites){
             sprite.Draw(_spriteBatch);
         }
         
@@ -149,5 +151,16 @@ public class Game1 : Game
         _spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    private Texture2D NewTexture(GraphicsDevice graphicsDevice, int width, int height, Color color)
+    {
+        Texture2D newTexture;
+        newTexture = new Texture2D(GraphicsDevice, width, height);
+        Color[] data = new Color[width * height];
+        for(int i = 0; i < data.Length; i++) data[i] = color;
+        newTexture.SetData(data);
+
+        return newTexture;
     }
 }
