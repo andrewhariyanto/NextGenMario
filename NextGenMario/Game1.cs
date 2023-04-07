@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Comora;
 
 namespace NextGenMario;
 
@@ -23,12 +24,14 @@ public class Game1 : Game
     // Declare player
     Player player = new Player();
 
+    // Declare camera
+    Camera camera;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        
     }
 
     protected override void Initialize()
@@ -37,6 +40,9 @@ public class Game1 : Game
         _graphics.PreferredBackBufferWidth = WINDOW_WIDTH;
         _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
         _graphics.ApplyChanges();
+
+        // Initialize the camera
+        camera = new Camera(_graphics.GraphicsDevice);
 
         base.Initialize();
     }
@@ -58,7 +64,12 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        // Handle player update
         player.Update(gameTime);
+
+        // Handle camera update (camera follows the player)
+        camera.Position = player.Position;
+        camera.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -68,7 +79,7 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.CornflowerBlue);
 
         // Render cycle (draw order matters)
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(this.camera);
         _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
         _spriteBatch.Draw(ball, player.Position, Color.White);
         _spriteBatch.DrawString(gameFont, "Test Message - Sprite Font Test", new Vector2(0,0), Color.Chocolate);
