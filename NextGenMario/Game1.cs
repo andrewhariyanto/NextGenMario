@@ -12,6 +12,7 @@ public class Game1 : Game
     private List<Sprite> _sprites;
     Texture2D enemyTexture;
     Texture2D enemyTexture1;
+    Texture2D enemyTexture2;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -57,6 +58,12 @@ public class Game1 : Game
         for(int i = 0; i < data1.Length; i++) data1[i] = Color.White;
         enemyTexture1.SetData(data1);
 
+        
+        enemyTexture2 = new Texture2D(GraphicsDevice, 50, WINDOW_HEIGHT-300);
+        Color[] data2 = new Color[50*(WINDOW_HEIGHT-300)];
+        for(int i = 0; i < data2.Length; i++) data2[i] = Color.White;
+        enemyTexture2.SetData(data2);
+
         _sprites = new List<Sprite>()
         {
             new Player(playerTexture)
@@ -89,6 +96,18 @@ public class Game1 : Game
                 color = Color.CornflowerBlue,
                 speed = 0f,
             },
+            new Enemy(enemyTexture2)
+            {
+                position = new Vector2(WINDOW_WIDTH - 500, 100),
+                color = Color.CornflowerBlue,
+                speed = 0f,
+            },
+                        new Enemy(enemyTexture2)
+            {
+                position = new Vector2(WINDOW_WIDTH - 900, 200),
+                color = Color.CornflowerBlue,
+                speed = 0f,
+            },
         };
 
         // Load the background
@@ -104,6 +123,7 @@ public class Game1 : Game
         _spriteBatch.Dispose();
         enemyTexture.Dispose();
         enemyTexture1.Dispose();
+        enemyTexture2.Dispose();
     }
 
     protected override void Update(GameTime gameTime)
