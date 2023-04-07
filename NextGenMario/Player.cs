@@ -163,7 +163,5 @@ public class Player : Sprite
                     break;
             }
         }
-        
-        velocity = Vector2.Zero;
     }
 }

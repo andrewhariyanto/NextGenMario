@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Comora;
 
 namespace NextGenMario;
 
@@ -25,8 +24,7 @@ public class Game1 : Game
     // Create reference for the custom text font
     SpriteFont gameFont;
 
-    // Declare camera and hold a reference for the player
-    Camera camera;
+    // Create a reference for the player
     Player player;
 
     public Game1()
@@ -43,9 +41,6 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = WINDOW_HEIGHT;
         _graphics.ApplyChanges();
 
-        // Initialize the camera
-        camera = new Camera(_graphics.GraphicsDevice);
-
         base.Initialize();
     }
 
@@ -57,15 +52,16 @@ public class Game1 : Game
         var playerTexture = Content.Load<Texture2D>("ball");
 
         enemyTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
-        enemyTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH-200, 100, Color.White);
+        enemyTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
+        enemyTexture2 = NewTexture(GraphicsDevice, 50, WINDOW_HEIGHT-300, Color.White);
 
         // Initialize the player
         player = new Player(playerTexture)
-            {
-                position = new Vector2(300, 500),
-                color = Color.Wheat,
-                speed = 300f,
-            };
+        {
+            position = new Vector2(300, 500),
+            color = Color.Wheat,
+            speed = 500f,
+        };
 
         _environmentSprites = new List<Sprite>()
         {
@@ -99,7 +95,7 @@ public class Game1 : Game
                 color = Color.CornflowerBlue,
                 speed = 0f,
             },
-                        new Enemy(enemyTexture2)
+            new Enemy(enemyTexture2)
             {
                 position = new Vector2(WINDOW_WIDTH - 900, 200),
                 color = Color.CornflowerBlue,
@@ -133,12 +129,9 @@ public class Game1 : Game
         // Handle player update
         player.Update(gameTime);
 
-        foreach( Sprite sprite in _environmentSprites)
+        // Handle environment updates
+        foreach (Sprite sprite in _environmentSprites)
             sprite.Update(gameTime);
-
-        // Handle camera update (camera follows the player)
-        camera.Position = player.position;
-        camera.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -155,13 +148,14 @@ public class Game1 : Game
         player.Draw(_spriteBatch);
 
         // draw the sprites
-        foreach(Sprite sprite in _environmentSprites){
+        foreach (Sprite sprite in _environmentSprites)
+        {
             sprite.Draw(_spriteBatch);
         }
-        
-        _spriteBatch.DrawString(gameFont, "Top-Down Maze", new Vector2(0,0), Color.Chocolate);
 
-        
+        _spriteBatch.DrawString(gameFont, "Top-Down Maze", new Vector2(0, 0), Color.Chocolate);
+
+
         _spriteBatch.End();
 
         base.Draw(gameTime);
@@ -172,7 +166,7 @@ public class Game1 : Game
         Texture2D newTexture;
         newTexture = new Texture2D(GraphicsDevice, width, height);
         Color[] data = new Color[width * height];
-        for(int i = 0; i < data.Length; i++) data[i] = color;
+        for (int i = 0; i < data.Length; i++) data[i] = color;
         newTexture.SetData(data);
 
         return newTexture;
