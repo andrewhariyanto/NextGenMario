@@ -10,6 +10,7 @@ public class Enemy : Sprite
 
     public Enemy(Texture2D texture) : base(texture)
     {
+        type = "Enemy";
     }
 
     public override void Update(GameTime gameTime, List<Sprite> _sprites)

@@ -132,8 +132,10 @@ public class Game1 : Game
             Exit();
 
 
-        foreach( var sprite in _sprites)
+        foreach( var sprite in _sprites){
             sprite.Update(gameTime, _sprites);
+        }
+            
 
         base.Update(gameTime);
     }
@@ -151,7 +153,7 @@ public class Game1 : Game
             sprite.Draw(_spriteBatch);
         }
         
-        _spriteBatch.DrawString(gameFont, "Test Message - Sprite Font Test", new Vector2(0,0), Color.Chocolate);
+        _spriteBatch.DrawString(gameFont, "Top-Down Maze", new Vector2(0,0), Color.Chocolate);
 
         
         _spriteBatch.End();

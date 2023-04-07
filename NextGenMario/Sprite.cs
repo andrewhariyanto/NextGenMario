@@ -17,6 +17,8 @@ public class Sprite
             return new Rectangle((int)position.X, (int)position.Y, _texture.Width, _texture.Height);
         }
     }
+    public string type;
+    public float rotation;
 
     public Sprite(Texture2D texture)
     {
