@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace NextGenMario;
 
-public class Enemy : Sprite
+public class Wall : Sprite
 {
 
-    public Enemy(Texture2D texture) : base(texture)
+    public Wall(Texture2D texture) : base(texture)
     {
-        type = "Enemy";
+        type = "wall";
     }
 
     public override void Update(GameTime gameTime)

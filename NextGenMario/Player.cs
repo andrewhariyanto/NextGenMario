@@ -22,10 +22,12 @@ public class Player : Sprite
     private Direction direction = Direction.Right;
     private bool isMoving = false;
     public List<Sprite> _environmentSprites;
+    public int health;
 
     public Player(Texture2D texture) : base(texture)
     {
         type = "player";
+        health = 100;
     }
 
     public void setX(float newX)
@@ -114,12 +116,28 @@ public class Player : Sprite
             isMoving = true;
         }
 
-        foreach(var sprite in _environmentSprites){
-            
-            if((this.velocity.X > 0 && this.isTouchingLeft(sprite)) || (this.velocity.X < 0 && this.isTouchingRight(sprite)))
-                this.velocity.X = 0;
-            if((this.velocity.Y > 0 && this.isTouchingTop(sprite)) || (this.velocity.Y < 0 && this.isTouchingBottom(sprite)))
-                this.velocity.Y = 0;
+        foreach (Sprite sprite in _environmentSprites)
+        {
+
+            if (sprite.type == "wall")
+            {
+                if ((this.velocity.X > 0 && this.isTouchingLeft(sprite)) || (this.velocity.X < 0 && this.isTouchingRight(sprite)))
+                    this.velocity.X = 0;
+                if ((this.velocity.Y > 0 && this.isTouchingTop(sprite)) || (this.velocity.Y < 0 && this.isTouchingBottom(sprite)))
+                    this.velocity.Y = 0;
+            }
+            else if (sprite.type == "bullet")
+            {
+                Bullet bullet = (Bullet)sprite;
+                if (!bullet.isHit)
+                {
+                    if (this.isTouchingLeft(sprite) || this.isTouchingRight(sprite) || this.isTouchingTop(sprite) || this.isTouchingBottom(sprite))
+                    {
+                        health -= 10;
+                        bullet.isHit = true;
+                    }
+                }
+            }
         }
 
         if (isMoving)

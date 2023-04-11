@@ -10,9 +10,10 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private List<Sprite> _environmentSprites;
-    Texture2D enemyTexture;
-    Texture2D enemyTexture1;
-    Texture2D enemyTexture2;
+    Texture2D wallTexture;
+    Texture2D wallTexture1;
+    Texture2D wallTexture2;
+    Texture2D bulletTexture;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -51,56 +52,63 @@ public class Game1 : Game
         // load the sprites
         var playerTexture = Content.Load<Texture2D>("ball");
 
-        enemyTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
-        enemyTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
-        enemyTexture2 = NewTexture(GraphicsDevice, 50, WINDOW_HEIGHT-300, Color.White);
+        wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
+        wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
+        wallTexture2 = NewTexture(GraphicsDevice, 50, WINDOW_HEIGHT-300, Color.White);
+        bulletTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
 
         // Initialize the player
         player = new Player(playerTexture)
         {
             position = new Vector2(300, 500),
             color = Color.Wheat,
-            speed = 500f,
+            speed = 500f
         };
 
         _environmentSprites = new List<Sprite>()
         {
-            new Enemy(enemyTexture)
+            new Wall(wallTexture)
             {
                 position = new Vector2(0, 0),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
-            new Enemy(enemyTexture)
+            new Wall(wallTexture)
             {
                 position = new Vector2(WINDOW_WIDTH - 100, 0),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
-            new Enemy(enemyTexture1)
+            new Wall(wallTexture1)
             {
                 position = new Vector2(100, 0),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
-            new Enemy(enemyTexture1)
+            new Wall(wallTexture1)
             {
                 position = new Vector2(100, WINDOW_HEIGHT-100),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
-            new Enemy(enemyTexture2)
+            new Wall(wallTexture2)
             {
                 position = new Vector2(WINDOW_WIDTH - 500, 100),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
-            new Enemy(enemyTexture2)
+            new Wall(wallTexture2)
             {
                 position = new Vector2(WINDOW_WIDTH - 900, 200),
                 color = Color.CornflowerBlue,
-                speed = 0f,
+                speed = 0f
             },
+            new Bullet(bulletTexture)
+            {
+                position = new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2),
+                color = Color.Orange,
+                speed = 0f
+            }
         };
 
         player._environmentSprites = _environmentSprites;
@@ -116,9 +124,9 @@ public class Game1 : Game
     {
         base.UnloadContent();
         _spriteBatch.Dispose();
-        enemyTexture.Dispose();
-        enemyTexture1.Dispose();
-        enemyTexture2.Dispose();
+        wallTexture.Dispose();
+        wallTexture1.Dispose();
+        wallTexture2.Dispose();
     }
 
     protected override void Update(GameTime gameTime)
@@ -144,16 +152,16 @@ public class Game1 : Game
         _spriteBatch.Begin();
         _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
-        // Draw the player
-        player.Draw(_spriteBatch);
-
         // draw the sprites
         foreach (Sprite sprite in _environmentSprites)
         {
             sprite.Draw(_spriteBatch);
         }
 
-        _spriteBatch.DrawString(gameFont, "Top-Down Maze", new Vector2(0, 0), Color.Chocolate);
+        // Draw the player
+        player.Draw(_spriteBatch);
+
+        _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
 
 
         _spriteBatch.End();
@@ -161,6 +169,9 @@ public class Game1 : Game
         base.Draw(gameTime);
     }
 
+    /// <summary>
+    /// Used to create a new texture for sprite 
+    /// </summary>
     private Texture2D NewTexture(GraphicsDevice graphicsDevice, int width, int height, Color color)
     {
         Texture2D newTexture;
