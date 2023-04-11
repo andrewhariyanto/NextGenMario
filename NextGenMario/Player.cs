@@ -21,6 +21,7 @@ public class Player : Sprite
 {
     private Direction direction = Direction.Right;
     private bool isMoving = false;
+    public List<Sprite> _environmentSprites;
 
     public Player(Texture2D texture) : base(texture)
     {
@@ -37,7 +38,7 @@ public class Player : Sprite
         position.Y = newY;
     }
 
-    public override void Update(GameTime gameTime, List<Sprite> _sprites)
+    public override void Update(GameTime gameTime)
     {
         KeyboardState kState = Keyboard.GetState();
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -113,9 +114,7 @@ public class Player : Sprite
             isMoving = true;
         }
 
-        foreach(var sprite in _sprites){
-            if(sprite == this)
-                continue;
+        foreach(var sprite in _environmentSprites){
             
             if((this.velocity.X > 0 && this.isTouchingLeft(sprite)) || (this.velocity.X < 0 && this.isTouchingRight(sprite)))
                 this.velocity.X = 0;
@@ -164,7 +163,5 @@ public class Player : Sprite
                     break;
             }
         }
-        
-        velocity = Vector2.Zero;
     }
 }

@@ -24,10 +24,12 @@ public class Sprite
     {
         _texture = texture;
     }
-    public virtual void Update(GameTime gameTime, List<Sprite> sprites)
+    
+    public virtual void Update(GameTime gameTime)
     {
 
     }
+
     public virtual void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(_texture, position, color);

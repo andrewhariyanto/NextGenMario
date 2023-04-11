@@ -13,7 +13,7 @@ public class Enemy : Sprite
         type = "Enemy";
     }
 
-    public override void Update(GameTime gameTime, List<Sprite> _sprites)
+    public override void Update(GameTime gameTime)
     {
     }
 }
