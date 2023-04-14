@@ -54,7 +54,7 @@ public class Game1 : Game
 
         // load the sprites
         var playerTexture = Content.Load<Texture2D>("ball");
-        var wallTexture = Content.Load<Texture2D>("wall");
+        var wallTextureWave = Content.Load<Texture2D>("wall");
 
         wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
@@ -70,7 +70,7 @@ public class Game1 : Game
         };
 
         // Initialize the wave
-        wave = new Wave(new Vector2(WINDOW_WIDTH, 300), 500f, 0, wallTexture);
+        wave = new Wave(new Vector2(WINDOW_WIDTH, 300), 500f, 0, wallTextureWave);
 
         _environmentSprites = new List<Sprite>()
         {
