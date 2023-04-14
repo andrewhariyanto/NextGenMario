@@ -50,6 +50,7 @@ public class Game1 : Game
 
         // load the sprites
         var playerTexture = Content.Load<Texture2D>("ball");
+        var wallTexture = Content.Load<Texture2D>("wall");
 
         enemyTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         enemyTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
