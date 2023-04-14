@@ -28,6 +28,9 @@ public class Game1 : Game
     // Create a reference for the player
     Player player;
 
+    // Create reference for Wave
+    Wave wave;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -51,6 +54,7 @@ public class Game1 : Game
 
         // load the sprites
         var playerTexture = Content.Load<Texture2D>("ball");
+        var wallTexture = Content.Load<Texture2D>("wall");
 
         wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
@@ -64,6 +68,9 @@ public class Game1 : Game
             color = Color.Wheat,
             speed = 500f
         };
+
+        // Initialize the wave
+        wave = new Wave(new Vector2(WINDOW_WIDTH, 300), 500f, 0, wallTexture);
 
         _environmentSprites = new List<Sprite>()
         {
@@ -134,6 +141,8 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
+        wave.Update(gameTime);
+
         // Handle player update
         player.Update(gameTime);
 
@@ -163,6 +172,7 @@ public class Game1 : Game
 
         _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
 
+        wave.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
