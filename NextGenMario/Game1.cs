@@ -10,6 +10,7 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private List<Sprite> _environmentSprites;
+    private BulletManager bulletManager;
     Texture2D wallTexture;
     Texture2D wallTexture1;
     Texture2D wallTexture2;
@@ -55,7 +56,14 @@ public class Game1 : Game
         wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
         wallTexture2 = NewTexture(GraphicsDevice, 50, WINDOW_HEIGHT-300, Color.White);
+
+        // All bullets texture
+        List<Texture2D> bulletTextureList = new List<Texture2D>(); 
         bulletTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
+        bulletTextureList.Add(bulletTexture);
+
+        // Initialize bulletManager
+        bulletManager = new BulletManager(bulletTextureList, 100);
 
         // Initialize the player
         player = new Player(playerTexture)
@@ -102,14 +110,11 @@ public class Game1 : Game
                 position = new Vector2(WINDOW_WIDTH - 900, 200),
                 color = Color.CornflowerBlue,
                 speed = 0f
-            },
-            new Bullet(bulletTexture)
-            {
-                position = new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2),
-                color = Color.Orange,
-                speed = 0f
             }
         };
+
+        // Add all bullets to the environment list
+        
 
         player._environmentSprites = _environmentSprites;
 
