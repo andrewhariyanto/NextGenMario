@@ -11,9 +11,9 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private List<Sprite> _environmentSprites;
     private BulletManager bulletManager;
+    private float timer = 0;
     Texture2D wallTexture;
     Texture2D wallTexture1;
-    Texture2D wallTexture2;
     Texture2D bulletTexture;
 
     // Declare window size
@@ -67,7 +67,7 @@ public class Game1 : Game
         // Initialize the player
         player = new Player(playerTexture)
         {
-            position = new Vector2(300, 500),
+            position = new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2),
             color = Color.Wheat,
             speed = 500f
         };
@@ -125,14 +125,14 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        // Add the elapsed time since the last frame to the timer
+        timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
         // Handle player update
         player.Update(gameTime);
-
-        // Calclate player center position
-        
 
         bulletManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
 
@@ -161,6 +161,7 @@ public class Game1 : Game
         player.Draw(_spriteBatch);
 
         _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
+        _spriteBatch.DrawString(gameFont, "Timer: "  + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH/2, 0), Color.Chocolate);
 
 
         _spriteBatch.End();
