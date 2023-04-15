@@ -10,8 +10,8 @@ public class Bullet : Sprite
 {
     public bool isHit;
     public bool isFired;
-    private Vector2 playerDirectionVector;
-    private TimeSpan totalGameTime = TimeSpan.Zero;
+    public Vector2 playerDirectionVector;
+    private Rectangle screenArea = new Rectangle(0, 0, 1280, 720);
 
     public Bullet(Texture2D texture) : base(texture)
     {
@@ -24,10 +24,7 @@ public class Bullet : Sprite
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        // Add the elapsed time to the total game time
-        totalGameTime += gameTime.ElapsedGameTime;
-
-        if (totalGameTime.TotalSeconds > 3) // TO-DO: Check if the position is out of the camera view instead
+        if (!this.BoundingBox.Intersects(screenArea))
         {
             isFired = false;
         }

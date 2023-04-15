@@ -8,10 +8,11 @@ namespace NextGenMario;
 
 public class BulletManager
 {
-    public Queue<Bullet> bulletQ;
-    public List<Vector2> spawnPoints;
-    private int fireCooldown = 30;
-    private int frameCounter = 0;
+    public Queue<Bullet> bulletQ = new Queue<Bullet>();
+    public List<Vector2> spawnPoints = new List<Vector2>();
+    private float timer = 0.0f;
+    private float waitTime = 0.5f;
+
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
     {
@@ -37,11 +38,11 @@ public class BulletManager
         }
 
         // Initialize the spawn points
-        for (int i = 0; i <= 1280; i += 128)
+        for (int i = 0; i <= 1200; i += 120)
         {
-            for (int j = 0; j <= 720; j += 72)
+            for (int j = 0; j <= 650; j += 65)
             {
-                if ((i > 0 && i < 1280) && (j > 0 && j < 720))
+                if ((i > 0 && i < 1200) && (j > 0 && j < 650))
                 {
                     continue;
                 }
@@ -66,21 +67,27 @@ public class BulletManager
 
         // Prepare each bullet
         bulletToFire.position = spawnPoints[randomIndex];
-        bulletToFire.speed = 1000;
+        bulletToFire.speed = 500;
+        bulletToFire.isHit = false;
+
+        // Put back to queue
+        bulletQ.Enqueue(bulletToFire);
 
         return bulletToFire;
     }
 
-    public void Update(GameTime gameTime)
+    public void Update(GameTime gameTime, Vector2 playerPos)
     {
-        float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        // Add the elapsed time since the last frame to the timer
+        timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        frameCounter ++;
-
-        if (frameCounter % fireCooldown == 0)
+        if (timer >= waitTime)
         {
+            // Reset timer
+            timer = 0.0f;
+
             Bullet bulletToFire = FireBulletFromQueue();
-            bulletQ.Enqueue(bulletToFire);
+            bulletToFire.playerDirectionVector = Vector2.Normalize(playerPos - bulletToFire.position);
             bulletToFire.isFired = true;
         }
     }

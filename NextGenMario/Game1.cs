@@ -55,7 +55,6 @@ public class Game1 : Game
 
         wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
-        wallTexture2 = NewTexture(GraphicsDevice, 50, WINDOW_HEIGHT-300, Color.White);
 
         // All bullets texture
         List<Texture2D> bulletTextureList = new List<Texture2D>(); 
@@ -98,23 +97,14 @@ public class Game1 : Game
                 position = new Vector2(100, WINDOW_HEIGHT-100),
                 color = Color.CornflowerBlue,
                 speed = 0f
-            },
-            new Wall(wallTexture2)
-            {
-                position = new Vector2(WINDOW_WIDTH - 500, 100),
-                color = Color.CornflowerBlue,
-                speed = 0f
-            },
-            new Wall(wallTexture2)
-            {
-                position = new Vector2(WINDOW_WIDTH - 900, 200),
-                color = Color.CornflowerBlue,
-                speed = 0f
             }
         };
 
         // Add all bullets to the environment list
-        
+        foreach (Sprite bullet in bulletManager.bulletQ)
+        {
+            _environmentSprites.Add(bullet);
+        }
 
         player._environmentSprites = _environmentSprites;
 
@@ -131,7 +121,6 @@ public class Game1 : Game
         _spriteBatch.Dispose();
         wallTexture.Dispose();
         wallTexture1.Dispose();
-        wallTexture2.Dispose();
     }
 
     protected override void Update(GameTime gameTime)
@@ -141,6 +130,11 @@ public class Game1 : Game
 
         // Handle player update
         player.Update(gameTime);
+
+        // Calclate player center position
+        
+
+        bulletManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
 
         // Handle environment updates
         foreach (Sprite sprite in _environmentSprites)
