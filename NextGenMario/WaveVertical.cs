@@ -46,6 +46,10 @@ public class WaveVertical{
         }
     }
 
+    public Wall[] getWalls(){
+        return walls;
+    }
+
     public void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;

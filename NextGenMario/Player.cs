@@ -119,7 +119,7 @@ public class Player : Sprite
         foreach (Sprite sprite in _environmentSprites)
         {
 
-            if (sprite.type == "wall")
+            if (sprite.type == "boundary")
             {
                 if ((this.velocity.X > 0 && this.isTouchingLeft(sprite)) || (this.velocity.X < 0 && this.isTouchingRight(sprite)))
                     this.velocity.X = 0;
@@ -137,6 +137,18 @@ public class Player : Sprite
                         bullet.isHit = true;
                         bullet.isFired = false;
                         bullet.position = new Vector2(-100, -100); // Move the bullet outside the screen
+                    }
+                }
+            }
+            else if (sprite.type == "wave")
+            {
+                Wall wall = (Wall) sprite;
+                if(!wall.isHit)
+                {
+                    if(this.isTouchingLeft(sprite) || this.isTouchingRight(sprite) || this.isTouchingBottom(sprite) || this.isTouchingTop(sprite))
+                    {
+                        health -= 10;
+                        wall.isHit = true;
                     }
                 }
             }

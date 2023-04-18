@@ -31,7 +31,7 @@ public class Game1 : Game
 
     // Create reference for Wave
     WaveHorizontal waveHorizontal;
-    WaveVertical waveVertical;
+    //WaveVertical waveVertical;
 
     public Game1()
     {
@@ -79,29 +79,29 @@ public class Game1 : Game
 
         // Initialize the wave
         waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
-        waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave);
+        //waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave);
 
         _environmentSprites = new List<Sprite>()
         {
-            new Wall(wallTexture)
+            new Boundary(wallTexture)
             {
                 position = new Vector2(0, 0),
                 color = Color.CornflowerBlue,
                 speed = 0f
             },
-            new Wall(wallTexture)
+            new Boundary(wallTexture)
             {
                 position = new Vector2(WINDOW_WIDTH - 100, 0),
                 color = Color.CornflowerBlue,
                 speed = 0f
             },
-            new Wall(wallTexture1)
+            new Boundary(wallTexture1)
             {
                 position = new Vector2(100, 0),
                 color = Color.CornflowerBlue,
                 speed = 0f
             },
-            new Wall(wallTexture1)
+            new Boundary(wallTexture1)
             {
                 position = new Vector2(100, WINDOW_HEIGHT-100),
                 color = Color.CornflowerBlue,
@@ -113,6 +113,11 @@ public class Game1 : Game
         foreach (Sprite bullet in bulletManager.bulletQ)
         {
             _environmentSprites.Add(bullet);
+        }
+
+        // add all horizontal waves to environment list
+        foreach(Sprite wave in waveHorizontal.getWalls()){
+            _environmentSprites.Add(wave);
         }
 
         player._environmentSprites = _environmentSprites;
@@ -141,7 +146,7 @@ public class Game1 : Game
             Exit();
 
         waveHorizontal.Update(gameTime);
-        waveVertical.Update(gameTime);
+        //waveVertical.Update(gameTime);
 
         // Handle player update
         player.Update(gameTime);
@@ -176,7 +181,7 @@ public class Game1 : Game
         _spriteBatch.DrawString(gameFont, "Timer: "  + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH/2, 0), Color.Chocolate);
 
         waveHorizontal.Draw(_spriteBatch);
-        waveVertical.Draw(_spriteBatch);
+        //waveVertical.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
