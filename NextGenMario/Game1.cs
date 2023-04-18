@@ -29,7 +29,8 @@ public class Game1 : Game
     Player player;
 
     // Create reference for Wave
-    Wave wave;
+    WaveHorizontal waveHorizontal;
+    WaveVertical waveVertical;
 
     public Game1()
     {
@@ -70,7 +71,8 @@ public class Game1 : Game
         };
 
         // Initialize the wave
-        wave = new Wave(new Vector2(WINDOW_WIDTH, 300), 500f, 0, wallTextureWave);
+        waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
+        waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave);
 
         _environmentSprites = new List<Sprite>()
         {
@@ -95,18 +97,6 @@ public class Game1 : Game
             new Wall(wallTexture1)
             {
                 position = new Vector2(100, WINDOW_HEIGHT-100),
-                color = Color.CornflowerBlue,
-                speed = 0f
-            },
-            new Wall(wallTexture2)
-            {
-                position = new Vector2(WINDOW_WIDTH - 500, 100),
-                color = Color.CornflowerBlue,
-                speed = 0f
-            },
-            new Wall(wallTexture2)
-            {
-                position = new Vector2(WINDOW_WIDTH - 900, 200),
                 color = Color.CornflowerBlue,
                 speed = 0f
             },
@@ -141,7 +131,8 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        wave.Update(gameTime);
+        waveHorizontal.Update(gameTime);
+        waveVertical.Update(gameTime);
 
         // Handle player update
         player.Update(gameTime);
@@ -172,7 +163,8 @@ public class Game1 : Game
 
         _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
 
-        wave.Draw(_spriteBatch);
+        waveHorizontal.Draw(_spriteBatch);
+        waveVertical.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
