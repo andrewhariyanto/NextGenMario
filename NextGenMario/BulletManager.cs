@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Microsoft.Xna.Framework.Input;
 
 namespace NextGenMario;
 
-public class BulletManager
+public class BulletManager : Level
 {
     public Queue<Bullet> bulletQ = new Queue<Bullet>();
     public List<Vector2> spawnPoints = new List<Vector2>();
@@ -16,6 +15,8 @@ public class BulletManager
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
     {
+        levelType = "BulletManager";
+
         // Create a new instance of random class
         Random random = new Random();
 

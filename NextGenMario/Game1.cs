@@ -138,11 +138,13 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        wave.Update(gameTime);
-
         // Handle player update
         player.Update(gameTime);
 
+        // Handle wave update
+        wave.Update(gameTime);
+
+        // Handle bullet manager update
         bulletManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
 
         // Handle environment updates
@@ -169,10 +171,13 @@ public class Game1 : Game
         // Draw the player
         player.Draw(_spriteBatch);
 
+        // Draw wave
+        wave.Draw(_spriteBatch);
+
         _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
         _spriteBatch.DrawString(gameFont, "Timer: "  + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH/2, 0), Color.Chocolate);
 
-        wave.Draw(_spriteBatch);
+        
 
         _spriteBatch.End();
 

@@ -4,8 +4,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NextGenMario;
 
-public class Wave{
-
+public class Wave : Level
+{
     int BLOCKHEIGHT = 700;
 
     public Vector2 position;
@@ -33,6 +33,7 @@ public class Wave{
         this.speed = speed;
         this.orientation = orientation;
         this.wallTexture = wallTexture;
+        levelType = "Wave";
         initializeWalls();
     }
 
