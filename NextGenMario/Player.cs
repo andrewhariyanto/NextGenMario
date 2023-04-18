@@ -135,6 +135,8 @@ public class Player : Sprite
                     {
                         health -= 10;
                         bullet.isHit = true;
+                        bullet.isFired = false;
+                        bullet.position = new Vector2(-100, -100); // Move the bullet outside the screen
                     }
                 }
             }
