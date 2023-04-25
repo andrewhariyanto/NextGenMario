@@ -18,10 +18,10 @@ public class RockManager{
 
     public Texture2D rockTexture;
     public Vector2[] wallPositions = new Vector2[] {
-        new Vector2(60, -60),
-        new Vector2(60-1280, 60),
-        new Vector2(-60-1280, 60 - 720),
-        new Vector2(-60, -60-720),
+        new Vector2(60, -90),
+        new Vector2(90-1280, 60),
+        new Vector2(-60-1280, 90 - 720),
+        new Vector2(-90, -60-720),
     };
 
     public Vector2[] startPositions = new Vector2[] {
@@ -29,6 +29,13 @@ public class RockManager{
         new Vector2(60-1280 - 120 - 580, 60),
         new Vector2(-60-1280, 60 - 720 - 120 - 300),
         new Vector2(-60 + 120 + 580, -60-720),
+    };
+
+    private Vector2[] offsets = new Vector2[] {
+        new Vector2(0, 0),
+        new Vector2(0, 0),
+        new Vector2(0, 0),
+        new Vector2(0, 0),
     };
 
     public RockManager(Vector2 position, float speed, Texture2D rockTexture, int numberOfRetracts){
@@ -60,20 +67,10 @@ public class RockManager{
         checkIfMax();
         if(numberOfRetracts >= 0){
             if(retract){
+                this.position.X += (this.newPosition.X - this.position.X) * deltaTime;
+                this.position.Y += (this.newPosition.Y - this.position.Y) * deltaTime;
+                System.Console.WriteLine(this.position);
                 Retract(deltaTime);
-                if(this.position.X > this.newPosition.X){
-                    this.position.X -= Math.Abs(this.position.X - this.newPosition.X)/2 * deltaTime;
-                }
-                else {
-                    this.position.X += Math.Abs(this.position.X - this.newPosition.X)/2 * deltaTime;
-                }
-
-                if(this.position.Y > this.newPosition.Y){
-                    this.position.Y -= Math.Abs(this.position.Y - this.newPosition.Y)/2 * deltaTime;
-                }
-                else{
-                    this.position.Y += Math.Abs(this.position.Y - this.newPosition.Y)/2 * deltaTime;
-                }
             }
             else{
                 CloseIn(deltaTime);
@@ -90,7 +87,7 @@ public class RockManager{
 
     private void CloseIn(float deltaTime){
         for(int i = 0; i < walls.Length; i += 2){
-            walls[i].position.Y -= ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+            walls[i].position.Y -= (float) Math.Pow(-1, i/2) * speed * deltaTime;
         }
 
         for(int i = 1; i < walls.Length; i += 2){
@@ -117,11 +114,15 @@ public class RockManager{
 
     private void Retract(float deltaTime){
         for(int i = 0; i < walls.Length; i += 2){
-            walls[i].position.Y += ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+            offsets[i].Y += (float) Math.Pow(-1, i/2) * speed * deltaTime;
+            walls[i].position.Y =  offsets[i].Y + this.position.Y + wallPositions[i].Y;
+            walls[i].position.X = this.position.X + wallPositions[i].X;
         }
 
         for(int i = 1; i < walls.Length; i += 2){
-            walls[i].position.X -= ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+            offsets[i].X -= ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+            walls[i].position.X = offsets[i].X + this.position.X + wallPositions[i].X;
+            walls[i].position.Y = this.position.Y + wallPositions[i].Y;
         }
         /*
         if(walls[0].position.Y < startPositions[0].Y){
@@ -156,6 +157,10 @@ public class RockManager{
                 int newNumX = newRand.Next() % 640 + 320;
                 int newNumY = newRand.Next() % 360 + 180;
                 newPosition = new Vector2(newNumX, newNumY);
+                System.Console.WriteLine("New Position: " + newPosition);
+                for(int i = 0; i < walls.Length; i++){
+                    offsets[i] = Vector2.Zero;
+                }
             }
         }
     }
