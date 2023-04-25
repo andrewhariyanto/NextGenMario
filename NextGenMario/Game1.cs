@@ -15,6 +15,7 @@ public class Game1 : Game
     Texture2D wallTexture;
     Texture2D wallTexture1;
     Texture2D bulletTexture;
+    Texture2D rockTexture;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -30,8 +31,11 @@ public class Game1 : Game
     Player player;
 
     // Create reference for Wave
-    WaveHorizontal waveHorizontal;
+    //WaveHorizontal waveHorizontal;
     //WaveVertical waveVertical;
+
+    // Reference for Rock Manager
+    private RockManager rockManager;
 
     public Game1()
     {
@@ -61,6 +65,8 @@ public class Game1 : Game
         wallTexture = NewTexture(GraphicsDevice, 100, WINDOW_HEIGHT, Color.White);
         wallTexture1 = NewTexture(GraphicsDevice, WINDOW_WIDTH - 200, 100, Color.White);
 
+        rockTexture = Content.Load<Texture2D>("rock");
+
         // All bullets texture
         List<Texture2D> bulletTextureList = new List<Texture2D>(); 
         bulletTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
@@ -78,8 +84,11 @@ public class Game1 : Game
         };
 
         // Initialize the wave
-        waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
+        //waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
         //waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave);
+
+        // Initialize rock
+        rockManager = new RockManager(new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), 500, rockTexture, 2);
 
         _environmentSprites = new List<Sprite>()
         {
@@ -116,9 +125,9 @@ public class Game1 : Game
         }
 
         // add all horizontal waves to environment list
-        foreach(Sprite wave in waveHorizontal.getWalls()){
+        /*foreach(Sprite wave in waveHorizontal.getWalls()){
             _environmentSprites.Add(wave);
-        }
+        }*/
 
         player._environmentSprites = _environmentSprites;
 
@@ -135,6 +144,7 @@ public class Game1 : Game
         _spriteBatch.Dispose();
         wallTexture.Dispose();
         wallTexture1.Dispose();
+        bulletTexture.Dispose();
     }
 
     protected override void Update(GameTime gameTime)
@@ -145,8 +155,10 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        waveHorizontal.Update(gameTime);
+        //waveHorizontal.Update(gameTime);
         //waveVertical.Update(gameTime);
+
+        rockManager.Update(gameTime);
 
         // Handle player update
         player.Update(gameTime);
@@ -174,13 +186,15 @@ public class Game1 : Game
             sprite.Draw(_spriteBatch);
         }
 
+        rockManager.Draw(_spriteBatch);
+
         // Draw the player
         player.Draw(_spriteBatch);
 
         _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
         _spriteBatch.DrawString(gameFont, "Timer: "  + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH/2, 0), Color.Chocolate);
 
-        waveHorizontal.Draw(_spriteBatch);
+        //waveHorizontal.Draw(_spriteBatch);
         //waveVertical.Draw(_spriteBatch);
 
         _spriteBatch.End();
