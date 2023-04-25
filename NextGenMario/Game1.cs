@@ -88,7 +88,7 @@ public class Game1 : Game
         //waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave);
 
         // Initialize rock
-        rockManager = new RockManager(new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), 500, rockTexture, 2);
+        rockManager = new RockManager(new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), 500, rockTexture, 8);
 
         _environmentSprites = new List<Sprite>()
         {
@@ -129,6 +129,10 @@ public class Game1 : Game
             _environmentSprites.Add(wave);
         }*/
 
+        foreach(Sprite wall in rockManager.getWalls()){
+            _environmentSprites.Add(wall);
+        }
+
         player._environmentSprites = _environmentSprites;
 
         // Load the background
@@ -163,7 +167,7 @@ public class Game1 : Game
         // Handle player update
         player.Update(gameTime);
 
-        bulletManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
+        //bulletManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
 
         // Handle environment updates
         foreach (Sprite sprite in _environmentSprites)

@@ -53,6 +53,7 @@ public class RockManager{
             walls[i] = (new Wall(rockTexture){
                 position = new Vector2(this.position.X + startPositions[i].X, this.position.Y + startPositions[i].Y),
                 speed = 0,
+                scale = 2,
             });
         }
     }
@@ -69,7 +70,6 @@ public class RockManager{
             if(retract){
                 this.position.X += (this.newPosition.X - this.position.X) * deltaTime;
                 this.position.Y += (this.newPosition.Y - this.position.Y) * deltaTime;
-                System.Console.WriteLine(this.position);
                 Retract(deltaTime);
             }
             else{
@@ -93,23 +93,6 @@ public class RockManager{
         for(int i = 1; i < walls.Length; i += 2){
             walls[i].position.X += ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
         }
-        /*
-        if(walls[0].position.Y > wallPositions[0].Y){
-            walls[0].position.Y -= speed * deltaTime;
-        }
-
-        if(walls[1].position.X < wallPositions[1].X){
-            walls[1].position.Y += speed * deltaTime;
-        }
-
-        if(walls[2].position.Y < wallPositions[2].Y){
-            walls[2].position.Y += speed * deltaTime;
-        }
-
-        if(walls[3].position.X > wallPositions[3].X){
-            walls[3].position.X -= speed * deltaTime;
-        }
-        */
     }
 
     private void Retract(float deltaTime){
@@ -124,23 +107,6 @@ public class RockManager{
             walls[i].position.X = offsets[i].X + this.position.X + wallPositions[i].X;
             walls[i].position.Y = this.position.Y + wallPositions[i].Y;
         }
-        /*
-        if(walls[0].position.Y < startPositions[0].Y){
-            walls[0].position.Y += speed * deltaTime;
-        }
-
-        if(walls[1].position.X > startPositions[1].X){
-            walls[1].position.Y -= speed * deltaTime;
-        }
-
-        if(walls[2].position.Y > startPositions[2].Y){
-            walls[2].position.Y -= speed * deltaTime;
-        }
-
-        if(walls[3].position.X < startPositions[3].X){
-            walls[3].position.X += speed * deltaTime;
-        }
-        */
     }
 
     private void checkIfMax(){
@@ -148,6 +114,9 @@ public class RockManager{
             if(walls[0].position.Y > this.position.Y + startPositions[0].Y && walls[1].position.X < this.position.X + startPositions[1].X && walls[2].position.Y < this.position.Y + startPositions[2].Y && walls[3].position.X > this.position.X + startPositions[3].X){
                 retract = false;
                 numberOfRetracts--;
+                foreach(Wall wall in walls){
+                    wall.isHit = false;
+                }
             }
         }
         else{
@@ -157,7 +126,6 @@ public class RockManager{
                 int newNumX = newRand.Next() % 640 + 320;
                 int newNumY = newRand.Next() % 360 + 180;
                 newPosition = new Vector2(newNumX, newNumY);
-                System.Console.WriteLine("New Position: " + newPosition);
                 for(int i = 0; i < walls.Length; i++){
                     offsets[i] = Vector2.Zero;
                 }

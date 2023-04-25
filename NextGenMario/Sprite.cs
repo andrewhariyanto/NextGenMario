@@ -10,11 +10,12 @@ public class Sprite
     public Vector2 velocity;
     public Color color = Color.White;
     public float speed;
+    public int scale = 1;
     public Rectangle BoundingBox
     {
         get
         {
-            return new Rectangle((int)position.X, (int)position.Y, _texture.Width, _texture.Height);
+            return new Rectangle((int)position.X, (int)position.Y, _texture.Width * scale, _texture.Height * scale);
         }
     }
     public string type;
