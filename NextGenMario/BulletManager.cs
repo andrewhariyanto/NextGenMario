@@ -11,6 +11,7 @@ public class BulletManager : Level
     public List<Vector2> spawnPoints = new List<Vector2>();
     private float timer = 0.0f;
     private float waitTime = 0.5f;
+    private float survival_Timer = 0.0f;
 
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
@@ -82,7 +83,15 @@ public class BulletManager : Level
         // Add the elapsed time since the last frame to the timer
         timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        if (timer >= waitTime)
+        // Add the survival timer for gameplay
+        survival_Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (survival_Timer > 20f)
+        {
+            isDone = true;
+        }
+
+        if (timer >= waitTime && survival_Timer <= 17f)
         {
             // Reset timer
             timer = 0.0f;

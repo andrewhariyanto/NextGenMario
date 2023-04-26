@@ -17,5 +17,7 @@ public class Wall : Sprite
 
     public override void Update(GameTime gameTime)
     {
+        
     }
+
 }

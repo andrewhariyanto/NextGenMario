@@ -8,4 +8,5 @@ namespace NextGenMario;
 public class Level
 {
     public string levelType;
+    public bool isDone = false;
 }

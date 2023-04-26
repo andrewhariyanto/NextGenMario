@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NextGenMario;
 
-public class WaveVertical{
+public class WaveVertical : Level {
 
     int BLOCKHEIGHT = 1400;
 
@@ -29,6 +29,7 @@ public class WaveVertical{
     };
 
     public WaveVertical(Vector2 position, float speed, int orientation, Texture2D wallTexture){
+        levelType = "WaveVertical";
         this.position = position;
         this.speed = speed;
         this.orientation = orientation;
@@ -55,11 +56,10 @@ public class WaveVertical{
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         this.position.Y += speed * deltaTime;
         redrawWalls();
-    }
 
-    public void Draw(SpriteBatch spriteBatch){
-        foreach(Wall wall in walls){
-            spriteBatch.Draw(wallTexture, wall.position, null, Color.White, (float) MathHelper.PiOver2, new Vector2((float)wall.BoundingBox.Width, (float)wall.BoundingBox.Height), new Vector2(1, 1), SpriteEffects.None, 1);
+        if (walls[0].position.Y > 900)
+        {
+            isDone = true;
         }
     }
 

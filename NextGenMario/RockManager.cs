@@ -5,7 +5,7 @@ using System;
 
 namespace NextGenMario;
 
-public class RockManager{
+public class RockManager : Level{
 
     int BLOCKHEIGHT = 1400;
 
@@ -39,6 +39,7 @@ public class RockManager{
     };
 
     public RockManager(Vector2 position, float speed, Texture2D rockTexture, int numberOfRetracts){
+        levelType = "RockManager";
         this.position = position;
         this.newPosition = position;
         this.speed = speed;
@@ -53,7 +54,6 @@ public class RockManager{
             walls[i] = (new Wall(rockTexture){
                 position = new Vector2(this.position.X + startPositions[i].X, this.position.Y + startPositions[i].Y),
                 speed = 0,
-                scale = 2,
             });
         }
     }
@@ -76,12 +76,14 @@ public class RockManager{
                 CloseIn(deltaTime);
             }
         }
-        //redrawWalls(deltaTime);
-    }
+        else
+        {
+            this.position = new Vector2(640,360);
 
-    public void Draw(SpriteBatch spriteBatch){
-        foreach(Wall wall in walls){
-            spriteBatch.Draw(rockTexture, wall.position, null, Color.White, 0, new Vector2(0, 0), new Vector2(2, 2), SpriteEffects.None, 1);
+            for (int i = 0; i < walls.Length; i++)
+            {
+                walls[i].position = position + startPositions[i];
+            }
         }
     }
 
