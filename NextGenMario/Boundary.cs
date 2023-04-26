@@ -4,14 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NextGenMario;
 
-public class Wall : Sprite
+public class Boundary : Sprite
 {
 
     public bool isHit;
 
-    public Wall(Texture2D texture) : base(texture)
+    public Boundary(Texture2D texture) : base(texture)
     {
-        type = "wave";
+        type = "boundary";
         isHit = false;
     }
 

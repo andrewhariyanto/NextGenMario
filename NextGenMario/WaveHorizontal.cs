@@ -4,9 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NextGenMario;
 
-public class Wave : Level
-{
-    int BLOCKHEIGHT = 700;
+public class WaveHorizontal{
+
+    int BLOCKHEIGHT = 1400;
 
     public Vector2 position;
     public float speed;
@@ -28,23 +28,26 @@ public class Wave : Level
         new Vector2(500, 420),
     };
 
-    public Wave(Vector2 position, float speed, int orientation, Texture2D wallTexture){
+    public WaveHorizontal(Vector2 position, float speed, int orientation, Texture2D wallTexture){
         this.position = position;
         this.speed = speed;
         this.orientation = orientation;
         this.wallTexture = wallTexture;
-        levelType = "Wave";
         initializeWalls();
     }
 
     private void initializeWalls(){
-        walls = new Wall[40];
+        walls = new Wall[24];
         for(int i = 0; i < walls.Length; i++){
             walls[i] = (new Wall(wallTexture){
                 position = new Vector2(this.position.X + (i/2)*100, this.position.Y + wallPositions[i%12].Y),
                 speed = 0,
             });
         }
+    }
+
+    public Wall[] getWalls(){
+        return walls;
     }
 
     public void Update(GameTime gameTime)
@@ -59,10 +62,3 @@ public class Wave : Level
             spriteBatch.Draw(wallTexture, wall.position, Color.White);
         }
     }
-
-    private void redrawWalls(){
-        for(int i = 0; i < walls.Length; i++){
-            walls[i].position.X = this.position.X + (i/2)*100;
-        }
-    }
-}
