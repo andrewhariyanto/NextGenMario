@@ -5,9 +5,10 @@ using System;
 
 namespace NextGenMario;
 
-public class RockManager : Level{
+public class RockManager : Level
+{
 
-    int BLOCKHEIGHT = 1400;
+    Vector2 startingPosition = new Vector2(1280 / 2, 720 / 2);
 
     public Vector2 position;
     public float speed;
@@ -38,7 +39,8 @@ public class RockManager : Level{
         new Vector2(0, 0),
     };
 
-    public RockManager(Vector2 position, float speed, Texture2D rockTexture, int numberOfRetracts){
+    public RockManager(Vector2 position, float speed, Texture2D rockTexture, int numberOfRetracts)
+    {
         levelType = "RockManager";
         this.position = position;
         this.newPosition = position;
@@ -48,17 +50,21 @@ public class RockManager : Level{
         initializeWalls();
     }
 
-    private void initializeWalls(){
+    private void initializeWalls()
+    {
         walls = new Wall[4];
-        for(int i = 0; i < walls.Length; i++){
-            walls[i] = (new Wall(rockTexture){
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i] = (new Wall(rockTexture)
+            {
                 position = new Vector2(this.position.X + startPositions[i].X, this.position.Y + startPositions[i].Y),
                 speed = 0,
             });
         }
     }
 
-    public Wall[] getWalls(){
+    public Wall[] getWalls()
+    {
         return walls;
     }
 
@@ -66,20 +72,22 @@ public class RockManager : Level{
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         checkIfMax();
-        if(numberOfRetracts >= 0){
-            if(retract){
+        if (numberOfRetracts >= 0)
+        {
+            if (retract)
+            {
                 this.position.X += (this.newPosition.X - this.position.X) * deltaTime;
                 this.position.Y += (this.newPosition.Y - this.position.Y) * deltaTime;
                 Retract(deltaTime);
             }
-            else{
+            else
+            {
                 CloseIn(deltaTime);
             }
         }
         else
         {
-            this.position = new Vector2(640,360);
-
+            this.position = new Vector2(640, 360);
             for (int i = 0; i < walls.Length; i++)
             {
                 walls[i].position = position + startPositions[i];
@@ -87,57 +95,86 @@ public class RockManager : Level{
         }
     }
 
-    private void CloseIn(float deltaTime){
-        for(int i = 0; i < walls.Length; i += 2){
-            walls[i].position.Y -= (float) Math.Pow(-1, i/2) * speed * deltaTime;
+    private void CloseIn(float deltaTime)
+    {
+        for (int i = 0; i < walls.Length; i += 2)
+        {
+            walls[i].position.Y -= (float)Math.Pow(-1, i / 2) * speed * deltaTime;
         }
 
-        for(int i = 1; i < walls.Length; i += 2){
-            walls[i].position.X += ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+        for (int i = 1; i < walls.Length; i += 2)
+        {
+            walls[i].position.X += ((float)Math.Pow(-1, i / 2)) * speed * deltaTime;
         }
     }
 
-    private void Retract(float deltaTime){
-        for(int i = 0; i < walls.Length; i += 2){
-            offsets[i].Y += (float) Math.Pow(-1, i/2) * speed * deltaTime;
-            walls[i].position.Y =  offsets[i].Y + this.position.Y + wallPositions[i].Y;
+    private void Retract(float deltaTime)
+    {
+        for (int i = 0; i < walls.Length; i += 2)
+        {
+            offsets[i].Y += (float)Math.Pow(-1, i / 2) * speed * deltaTime;
+            walls[i].position.Y = offsets[i].Y + this.position.Y + wallPositions[i].Y;
             walls[i].position.X = this.position.X + wallPositions[i].X;
         }
 
-        for(int i = 1; i < walls.Length; i += 2){
-            offsets[i].X -= ((float) Math.Pow(-1, i/2)) * speed * deltaTime;
+        for (int i = 1; i < walls.Length; i += 2)
+        {
+            offsets[i].X -= ((float)Math.Pow(-1, i / 2)) * speed * deltaTime;
             walls[i].position.X = offsets[i].X + this.position.X + wallPositions[i].X;
             walls[i].position.Y = this.position.Y + wallPositions[i].Y;
         }
     }
 
-    private void checkIfMax(){
-        if(retract){
-            if(walls[0].position.Y > this.position.Y + startPositions[0].Y && walls[1].position.X < this.position.X + startPositions[1].X && walls[2].position.Y < this.position.Y + startPositions[2].Y && walls[3].position.X > this.position.X + startPositions[3].X){
+    private void checkIfMax()
+    {
+        if (retract)
+        {
+            if (walls[0].position.Y > this.position.Y + startPositions[0].Y && walls[1].position.X < this.position.X + startPositions[1].X && walls[2].position.Y < this.position.Y + startPositions[2].Y && walls[3].position.X > this.position.X + startPositions[3].X)
+            {
                 retract = false;
                 numberOfRetracts--;
-                foreach(Wall wall in walls){
+                foreach (Wall wall in walls)
+                {
                     wall.isHit = false;
                 }
             }
         }
-        else{
-            if(walls[0].position.Y < this.position.Y + wallPositions[0].Y && walls[1].position.X > this.position.X + wallPositions[1].X && walls[2].position.Y > this.position.Y + wallPositions[2].Y && walls[3].position.X < this.position.X + wallPositions[3].X){
+        else
+        {
+            if (walls[0].position.Y < this.position.Y + wallPositions[0].Y && walls[1].position.X > this.position.X + wallPositions[1].X && walls[2].position.Y > this.position.Y + wallPositions[2].Y && walls[3].position.X < this.position.X + wallPositions[3].X)
+            {
                 retract = true;
                 Random newRand = new Random();
                 int newNumX = newRand.Next() % 640 + 320;
                 int newNumY = newRand.Next() % 360 + 180;
                 newPosition = new Vector2(newNumX, newNumY);
-                for(int i = 0; i < walls.Length; i++){
+                for (int i = 0; i < walls.Length; i++)
+                {
                     offsets[i] = Vector2.Zero;
                 }
             }
         }
     }
 
-    private void redrawWalls(float deltaTime){
-        for(int i = 0; i < walls.Length; i++){
-           // walls[i].position.X = this.position.X + (i/2)*100;
+    private void redrawWalls(float deltaTime)
+    {
+        for (int i = 0; i < walls.Length; i++)
+        {
+            // walls[i].position.X = this.position.X + (i/2)*100;
         }
+    }
+
+    public override void Reset()
+    {
+        this.position = startingPosition;
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i].position = new Vector2(this.position.X + startPositions[i].X, this.position.Y + startPositions[i].Y);
+            walls[i].isHit = false;
+        }
+        for(int i = 0; i < offsets.Length; i++){
+            offsets[i] = Vector2.Zero;
+        }
+        base.Reset();
     }
 }

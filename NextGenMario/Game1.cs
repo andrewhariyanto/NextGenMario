@@ -38,6 +38,12 @@ public class Game1 : Game
     // Reference for Rock Manager
     private RockManager rockManager;
 
+    // titlescreen
+    private IScreen startScreen;
+    private float bestTime = 0f;
+
+    public bool isPlaying = false;
+
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -60,7 +66,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // load the sprites
-        var playerTexture = Content.Load<Texture2D>("ball");
+        var playerTexture = Content.Load<Texture2D>("frame1");
         var wallTextureWave = Content.Load<Texture2D>("wall");
         var wallTextureWave_Vertical = Content.Load<Texture2D>("wallVertical");
 
@@ -70,7 +76,7 @@ public class Game1 : Game
         rockTexture = Content.Load<Texture2D>("rock");
 
         // All bullets texture
-        List<Texture2D> bulletTextureList = new List<Texture2D>(); 
+        List<Texture2D> bulletTextureList = new List<Texture2D>();
         bulletTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
         bulletTextureList.Add(bulletTexture);
 
@@ -80,7 +86,7 @@ public class Game1 : Game
         // Initialize the player
         player = new Player(playerTexture)
         {
-            position = new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2),
+            position = new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2),
             color = Color.Wheat,
             speed = 300f
         };
@@ -90,7 +96,7 @@ public class Game1 : Game
         waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave_Vertical);
 
         // Initialize rock
-        rockManager = new RockManager(new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2), 500, rockTexture, 8);
+        rockManager = new RockManager(new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500, rockTexture, 8);
 
         // Initialize Level Manager
         List<Level> levels = new List<Level>();
@@ -135,15 +141,18 @@ public class Game1 : Game
         }
 
         // add all horizontal waves to environment list
-        foreach(Sprite wave in waveHorizontal.getWalls()){
+        foreach (Sprite wave in waveHorizontal.getWalls())
+        {
             _environmentSprites.Add(wave);
         }
 
-        foreach(Sprite wave in waveVertical.getWalls()){
+        foreach (Sprite wave in waveVertical.getWalls())
+        {
             _environmentSprites.Add(wave);
         }
 
-        foreach(Sprite wall in rockManager.getWalls()){
+        foreach (Sprite wall in rockManager.getWalls())
+        {
             _environmentSprites.Add(wall);
         }
 
@@ -154,6 +163,11 @@ public class Game1 : Game
 
         // Load sprite font
         gameFont = Content.Load<SpriteFont>("DefaultFont");
+
+
+        var startScreenBackground = Content.Load<Texture2D>("titlescreen");
+        // load start screen
+        startScreen = new StartScreen(startScreenBackground, gameFont);
     }
 
     protected override void UnloadContent()
@@ -167,21 +181,42 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
-        // Add the elapsed time since the last frame to the timer
-        timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
+        if (isPlaying)
+        {
+            // Add the elapsed time since the last frame to the timer
+            timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
 
-        // Handle levels
-        levelManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width/2, player.position.Y + player.BoundingBox.Height/2));
+            // Handle levels
+            levelManager.Update(gameTime, new Vector2(player.position.X + player.BoundingBox.Width / 2, player.position.Y + player.BoundingBox.Height / 2));
 
-        // Handle environment updates
-        foreach (Sprite sprite in _environmentSprites)
-            sprite.Update(gameTime);
+            // Handle environment updates
+            foreach (Sprite sprite in _environmentSprites)
+                sprite.Update(gameTime);
 
-        // Handle player update
-        player.Update(gameTime);
+            // Handle player update
+            player.Update(gameTime);
+
+            if (player.health <= 0)
+            {
+                if(timer > bestTime){
+                    bestTime = timer;
+                }
+                isPlaying = false;
+            }
+        }
+        else
+        {
+            startScreen.Update(gameTime);
+            KeyboardState keyState = Keyboard.GetState();
+            if (keyState.IsKeyDown(Keys.Space))
+            {
+                isPlaying = true;
+                ResetGame();
+            }
+        }
 
         base.Update(gameTime);
     }
@@ -192,22 +227,31 @@ public class Game1 : Game
 
         // Render cycle (draw order matters)
         _spriteBatch.Begin();
-        _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
 
-        // draw the sprites
-        foreach (Sprite sprite in _environmentSprites)
+        if (isPlaying)
         {
-            sprite.Draw(_spriteBatch);
+            _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
+
+            // draw the sprites
+            foreach (Sprite sprite in _environmentSprites)
+            {
+                sprite.Draw(_spriteBatch);
+            }
+
+            // Draw the player
+            player.Draw(_spriteBatch);
+
+
+            _spriteBatch.DrawString(gameFont, "Player Health: " + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
+            _spriteBatch.DrawString(gameFont, "Timer: " + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH / 2, 0), Color.Chocolate);
+        }
+        else
+        {
+            startScreen.Draw(_spriteBatch, bestTime);
         }
 
-        // Draw the player
-        player.Draw(_spriteBatch);
-        
 
-        _spriteBatch.DrawString(gameFont, "Player Health: "  + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
-        _spriteBatch.DrawString(gameFont, "Timer: "  + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH/2, 0), Color.Chocolate);
 
-        
         _spriteBatch.End();
         base.Draw(gameTime);
     }
@@ -224,5 +268,13 @@ public class Game1 : Game
         newTexture.SetData(data);
 
         return newTexture;
+    }
+
+    private void ResetGame()
+    {
+        player.position = new Vector2(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+        player.health = 100;
+        timer = 0;
+        levelManager.ResetLevels();
     }
 }

@@ -101,4 +101,9 @@ public class BulletManager : Level
             bulletToFire.isFired = true;
         }
     }
+
+    public override void Reset()
+    {
+        
+    }
 }

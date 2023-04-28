@@ -47,4 +47,11 @@ public class LevelManager
         }
 
     }
+
+    public void ResetLevels(){
+        levelToPlay = 0;
+        for(int i = 0; i < levelList.Count; i++){
+            levelList[i].Reset();
+        }
+    }
 }

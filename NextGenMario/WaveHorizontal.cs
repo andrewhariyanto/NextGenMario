@@ -4,10 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace NextGenMario;
 
-public class WaveHorizontal : Level{
-
-    int BLOCKHEIGHT = 1400;
-
+public class WaveHorizontal : Level
+{
+    Vector2 startingPosition = new Vector2(1280, 100);
     public Vector2 position;
     public float speed;
     public Wall[] walls;
@@ -28,7 +27,8 @@ public class WaveHorizontal : Level{
         new Vector2(500, 420),
     };
 
-    public WaveHorizontal(Vector2 position, float speed, int orientation, Texture2D wallTexture){
+    public WaveHorizontal(Vector2 position, float speed, int orientation, Texture2D wallTexture)
+    {
         levelType = "WaveHorizontal";
         this.position = position;
         this.speed = speed;
@@ -37,17 +37,20 @@ public class WaveHorizontal : Level{
         initializeWalls();
     }
 
-    private void initializeWalls(){
+    private void initializeWalls()
+    {
         walls = new Wall[24];
-        for(int i = 0; i < walls.Length; i++){
-            walls[i] = (new Wall(wallTexture){
-                position = new Vector2(this.position.X + (i/2)*100, this.position.Y + wallPositions[i%12].Y),
-                speed = 0,
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i] = (new Wall(wallTexture)
+            {
+                position = new Vector2(this.position.X + (i / 2) * 100, this.position.Y + wallPositions[i % 12].Y),
             });
         }
     }
 
-    public Wall[] getWalls(){
+    public Wall[] getWalls()
+    {
         return walls;
     }
 
@@ -63,9 +66,22 @@ public class WaveHorizontal : Level{
         }
     }
 
-    private void redrawWalls(){
-        for(int i = 0; i < walls.Length; i++){
-            walls[i].position.X = this.position.X + (i/2)*100;
+    private void redrawWalls()
+    {
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i].position.X = this.position.X + (i / 2) * 100;
         }
+    }
+
+    public override void Reset()
+    {
+        this.position = startingPosition;
+        for (int i = 0; i < walls.Length; i++)
+        {
+            walls[i].position = new Vector2(this.position.X + (i / 2) * 100, this.position.Y + wallPositions[i % 12].Y);
+            walls[i].isHit = false;
+        }
+        base.Reset();
     }
 }
