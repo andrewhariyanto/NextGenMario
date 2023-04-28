@@ -12,11 +12,14 @@ public class BulletManager : Level
     private float timer = 0.0f;
     private float waitTime = 0.5f;
     private float survival_Timer = 0.0f;
+    public float bulletSpeed;
 
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
     {
         levelType = "BulletManager";
+
+        bulletSpeed = 500f;
 
         // Create a new instance of random class
         Random random = new Random();
@@ -69,7 +72,7 @@ public class BulletManager : Level
 
         // Prepare each bullet
         bulletToFire.position = spawnPoints[randomIndex];
-        bulletToFire.speed = 500;
+        bulletToFire.speed = bulletSpeed;
         bulletToFire.isHit = false;
 
         // Put back to queue

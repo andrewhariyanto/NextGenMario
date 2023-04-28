@@ -10,7 +10,7 @@ public class LevelManager
     int levelToPlay = 0;
     List<Level> levelList = new List<Level>();
 
-    public LevelManager(List<Level> newlevelList) 
+    public LevelManager(List<Level> newlevelList)
     {
         // Update the level number and the level list
         levelNumber = newlevelList.Count;
@@ -45,13 +45,35 @@ public class LevelManager
             BulletManager bulletManager = (BulletManager)levelList[levelToPlay];
             bulletManager.Update(gameTime, playerPos);
         }
-
     }
 
-    public void ResetLevels(){
+    public void ResetLevels()
+    {
         levelToPlay = 0;
-        for(int i = 0; i < levelList.Count; i++){
+        for (int i = 0; i < levelList.Count; i++)
+        {
             levelList[i].Reset();
+
+            if (levelList[i].levelType == "WaveHorizontal")
+            {
+                WaveHorizontal waveHorizontal = (WaveHorizontal)levelList[i];
+                waveHorizontal.speed = 300f;
+            }
+            if (levelList[i].levelType == "WaveVertical")
+            {
+                WaveVertical waveVertical = (WaveVertical)levelList[i];
+                waveVertical.speed = 200f;
+            }
+            if (levelList[i].levelType == "RockManager")
+            {
+                RockManager rockManager = (RockManager)levelList[i];
+                rockManager.speed = 500f;
+            }
+            if (levelList[i].levelType == "BulletManager")
+            {
+                BulletManager bulletManager = (BulletManager)levelList[i];
+                bulletManager.bulletSpeed = 500f;
+            }
         }
     }
 }
