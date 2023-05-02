@@ -212,12 +212,12 @@ public class WindManager : Level
             obstacle.playerDirectionVector = Vector2.Normalize(playerPos - obstacle.position);
             obstacle.isFired = true;
 
-            List<WindParticle> windParticles = createParticleList(orientation);
-            foreach (WindParticle particle in windParticles)
-            {
-                particle.isFired = true;
-                particle.orientation = orientation;
-            }
+            // List<WindParticle> windParticles = createParticleList(orientation);
+            // foreach (WindParticle particle in windParticles)
+            // {
+            //     particle.isFired = true;
+            //     particle.orientation = orientation;
+            // }
         }
     }
 

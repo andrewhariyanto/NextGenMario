@@ -22,7 +22,7 @@ public class LevelManager
 
         // Create a new instance of random class
         random = new Random();
-        orientation = random.Next(1,5);
+        orientation = random.Next(1,101) % 4;
     }
 
     public void Update(GameTime gameTime, Vector2 playerPos)

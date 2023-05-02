@@ -159,11 +159,11 @@ public class Game1 : Game
             _environmentSprites.Add(obstacle);
         }
 
-        // Add all obstalces to the environment list
-        foreach (Sprite particle in windManager.windParticlesQ)
-        {
-            _environmentSprites.Add(particle);
-        }
+        // // Add all obstalces to the environment list
+        // foreach (Sprite particle in windManager.windParticlesQ)
+        // {
+        //     _environmentSprites.Add(particle);
+        // }
 
         // add all horizontal waves to environment list
         foreach (Sprite wave in waveHorizontal.getWalls())
