@@ -12,11 +12,14 @@ public class BulletManager : Level
     private float timer = 0.0f;
     private float waitTime = 0.5f;
     private float survival_Timer = 0.0f;
+    public float bulletSpeed;
 
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
     {
         levelType = "BulletManager";
+
+        bulletSpeed = 500f;
 
         // Create a new instance of random class
         Random random = new Random();
@@ -69,7 +72,7 @@ public class BulletManager : Level
 
         // Prepare each bullet
         bulletToFire.position = spawnPoints[randomIndex];
-        bulletToFire.speed = 500;
+        bulletToFire.speed = bulletSpeed;
         bulletToFire.isHit = false;
 
         // Put back to queue
@@ -89,9 +92,10 @@ public class BulletManager : Level
         if (survival_Timer > 20f)
         {
             isDone = true;
+            bulletSpeed += 50f;
         }
 
-        if (timer >= waitTime && survival_Timer <= 17f)
+        if (timer >= waitTime && survival_Timer <= 18f)
         {
             // Reset timer
             timer = 0.0f;
@@ -104,6 +108,11 @@ public class BulletManager : Level
 
     public override void Reset()
     {
-        
+        survival_Timer = 0.0f;
+        foreach (Bullet bullet in bulletQ)
+        {
+            bullet.position = new Vector2(-100, -100);
+        }
+        base.Reset();
     }
 }

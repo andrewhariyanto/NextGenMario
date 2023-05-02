@@ -11,12 +11,14 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private List<Sprite> _environmentSprites;
     private BulletManager bulletManager;
+    private WindManager windManager;
     private LevelManager levelManager;
     private float timer = 0;
     Texture2D wallTexture;
     Texture2D wallTexture1;
     Texture2D bulletTexture;
     Texture2D rockTexture;
+    Texture2D obstacleTexture;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -83,6 +85,13 @@ public class Game1 : Game
         // Initialize bulletManager
         bulletManager = new BulletManager(bulletTextureList, 100);
 
+        // All wind obstacles texture
+        List<Texture2D> obstacleTextureList = new List<Texture2D>();
+        obstacleTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
+        obstacleTextureList.Add(obstacleTexture);
+
+        
+
         // Initialize the player
         player = new Player(playerTexture)
         {
@@ -91,18 +100,22 @@ public class Game1 : Game
             speed = 300f
         };
 
+        // Initialize windObstacle
+        windManager = new WindManager(obstacleTextureList, 100, player, 200);
+
         // Initialize the wave
         waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
         waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave_Vertical);
 
         // Initialize rock
-        rockManager = new RockManager(new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500, rockTexture, 8);
+        rockManager = new RockManager(new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500, rockTexture, 6);
 
         // Initialize Level Manager
         List<Level> levels = new List<Level>();
         levels.Add(waveHorizontal);
         levels.Add(waveVertical);
         levels.Add(bulletManager);
+        levels.Add(windManager);
         levels.Add(rockManager);
         levelManager = new LevelManager(levels);
 
@@ -138,6 +151,18 @@ public class Game1 : Game
         foreach (Sprite bullet in bulletManager.bulletQ)
         {
             _environmentSprites.Add(bullet);
+        }
+
+        // Add all obstalces to the environment list
+        foreach (Sprite obstacle in windManager.windObstaclesQ)
+        {
+            _environmentSprites.Add(obstacle);
+        }
+
+        // Add all obstalces to the environment list
+        foreach (Sprite particle in windManager.windParticlesQ)
+        {
+            _environmentSprites.Add(particle);
         }
 
         // add all horizontal waves to environment list
@@ -243,7 +268,8 @@ public class Game1 : Game
 
 
             _spriteBatch.DrawString(gameFont, "Player Health: " + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
-            _spriteBatch.DrawString(gameFont, "Timer: " + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH / 2, 0), Color.Chocolate);
+            _spriteBatch.DrawString(gameFont, "Timer: " + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH / 2 - 50, 0), Color.Chocolate);
+            _spriteBatch.DrawString(gameFont, "Stage: " + levelManager.stageNumber, new Vector2(WINDOW_WIDTH - 150, 0), Color.Chocolate);
         }
         else
         {

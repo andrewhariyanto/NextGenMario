@@ -23,6 +23,8 @@ public class Player : Sprite
     private bool isMoving = false;
     public List<Sprite> _environmentSprites;
     public int health;
+    public bool isWinded = false;
+    public int orientation = 1;
 
     public Player(Texture2D texture) : base(texture)
     {
@@ -140,6 +142,20 @@ public class Player : Sprite
                     }
                 }
             }
+            else if (sprite.type == "windObstacle")
+            {
+                WindObstacle obstacle = (WindObstacle)sprite;
+                if (!obstacle.isHit)
+                {
+                    if (this.isTouchingLeft(sprite) || this.isTouchingRight(sprite) || this.isTouchingTop(sprite) || this.isTouchingBottom(sprite))
+                    {
+                        health -= 10;
+                        obstacle.isHit = true;
+                        obstacle.isFired = false;
+                        obstacle.position = new Vector2(-100, -100); // Move the obstacle outside the screen
+                    }
+                }
+            }
             else if (sprite.type == "wave")
             {
                 Wall wall = (Wall) sprite;
@@ -195,5 +211,27 @@ public class Player : Sprite
                     break;
             }
         }
+
+        // Handle Wind effect
+        if (isWinded)
+        {
+            if (orientation == 1) // Left
+            {
+                position.X -= 3;
+            }
+            if (orientation == 2) // Right
+            {
+                position.X += 3;
+            }
+            if (orientation == 3) // Top
+            {
+                position.Y -= 3;
+            }
+            if (orientation == 4) // Down
+            {
+                position.Y += 3;
+            }
+        }
+        
     }
 }

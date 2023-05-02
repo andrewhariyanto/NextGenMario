@@ -63,6 +63,7 @@ public class WaveHorizontal : Level
         if (walls[walls.Length - 1].position.X < -180)
         {
             isDone = true;
+            speed += 100;
         }
     }
 
