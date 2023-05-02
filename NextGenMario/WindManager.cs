@@ -12,7 +12,9 @@ public class WindManager : Level
 
     public List<Vector2> spawnPoints = new List<Vector2>();
     private float timer = 0.0f;
+    private float timer2 = 0.0f;
     private float waitTime = 0.5f;
+    private float particleWaitTime = 0.2f;
     private float survival_Timer = 0.0f;
     public float obstacleSpeed;
     Player player;
@@ -20,7 +22,7 @@ public class WindManager : Level
 
 
 
-    public WindManager(List<Texture2D> textures, int obstacleCount, Player newplayer, int particleCount)
+    public WindManager(List<Texture2D> textures, int obstacleCount, Player newplayer, int particleCount, Texture2D particleTexture)
     {
         levelType = "WindManager";
 
@@ -56,10 +58,10 @@ public class WindManager : Level
             int randomIndex = random.Next(1, 101) % textures.Count;
 
             // Create the obstacle
-            WindParticle particle = new WindParticle(textures[randomIndex])
+            WindParticle particle = new WindParticle(particleTexture)
             {
-                position = new Vector2(-10, -10),
-                color = Color.BlueViolet,
+                position = new Vector2(-100, -100),
+                color = Color.WhiteSmoke,
                 speed = 0
             };
 
@@ -192,6 +194,7 @@ public class WindManager : Level
         
         // Add the elapsed time since the last frame to the timer
         timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        timer2 += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         // Add the survival timer for gameplay
         survival_Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -203,6 +206,18 @@ public class WindManager : Level
             obstacleSpeed += 50f;
         }
 
+        if (timer2 >= particleWaitTime && survival_Timer <= 18f)
+        {
+            timer2 = 0.0f;
+
+            List<WindParticle> windParticles = createParticleList(orientation);
+            foreach (WindParticle particle in windParticles)
+            {
+                particle.isFired = true;
+                particle.orientation = orientation;
+            }
+        }
+
         if (timer >= waitTime && survival_Timer <= 18f)
         {
             // Reset timer
@@ -211,13 +226,6 @@ public class WindManager : Level
             WindObstacle obstacle = PullObstacleFromQueue(orientation);
             obstacle.playerDirectionVector = Vector2.Normalize(playerPos - obstacle.position);
             obstacle.isFired = true;
-
-            // List<WindParticle> windParticles = createParticleList(orientation);
-            // foreach (WindParticle particle in windParticles)
-            // {
-            //     particle.isFired = true;
-            //     particle.orientation = orientation;
-            // }
         }
     }
 
