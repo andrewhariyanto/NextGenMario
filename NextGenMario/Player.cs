@@ -225,11 +225,11 @@ public class Player : Sprite
             }
             if (orientation == 3) // Top
             {
-                position.Y -= 3;
+                position.Y += 3;
             }
             if (orientation == 4) // Down
             {
-                position.Y += 3;
+                position.Y -= 3;
             }
         }
         
