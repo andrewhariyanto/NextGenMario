@@ -13,6 +13,7 @@ public class BulletManager : Level
     private float waitTime = 0.5f;
     private float survival_Timer = 0.0f;
     public float bulletSpeed;
+    public int numOfRound = 0;
 
 
     public BulletManager(List<Texture2D> textures, int bulletCount)
@@ -92,6 +93,7 @@ public class BulletManager : Level
         if (survival_Timer > 20f)
         {
             isDone = true;
+            numOfRound ++;
         }
 
         if (timer >= waitTime && survival_Timer <= 17f)
