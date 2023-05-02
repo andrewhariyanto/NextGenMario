@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace NextGenMario;
 
@@ -10,12 +11,18 @@ public class LevelManager
     int levelToPlay = 0;
     List<Level> levelList = new List<Level>();
     public int stageNumber = 1;
+    public int orientation; //Blow toward direction of 1: Left 2: Right 3: Top 4: Down
+    Random random;
 
     public LevelManager(List<Level> newlevelList)
     {
         // Update the level number and the level list
         levelNumber = newlevelList.Count;
         levelList = newlevelList;
+
+        // Create a new instance of random class
+        random = new Random();
+        orientation = random.Next(1,5);
     }
 
     public void Update(GameTime gameTime, Vector2 playerPos)
@@ -31,6 +38,7 @@ public class LevelManager
         {
             levelToPlay = 0;
             stageNumber ++;
+            orientation = random.Next(1,5);
             System.Console.WriteLine("--- Reset Stage ---");
         }
         if (levelList[levelToPlay].levelType == "WaveHorizontal")
@@ -52,6 +60,11 @@ public class LevelManager
         {
             BulletManager bulletManager = (BulletManager)levelList[levelToPlay];
             bulletManager.Update(gameTime, playerPos);
+        }
+        if (levelList[levelToPlay].levelType == "WindManager")
+        {
+            WindManager windManager = (WindManager)levelList[levelToPlay];
+            windManager.Update(gameTime, playerPos, orientation);
         }
     }
 
@@ -82,6 +95,11 @@ public class LevelManager
             {
                 BulletManager bulletManager = (BulletManager)levelList[i];
                 bulletManager.bulletSpeed = 500f;
+            }
+            if (levelList[i].levelType == "WindManager")
+            {
+                WindManager windManager = (WindManager)levelList[i];
+                windManager.obstacleSpeed = 500f;
             }
         }
     }
