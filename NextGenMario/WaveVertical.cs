@@ -64,6 +64,7 @@ public class WaveVertical : Level
         if (walls[0].position.Y > 900)
         {
             isDone = true;
+            speed += 100;
         }
     }
 

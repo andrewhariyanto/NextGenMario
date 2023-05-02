@@ -9,6 +9,7 @@ public class LevelManager
     int levelNumber;
     int levelToPlay = 0;
     List<Level> levelList = new List<Level>();
+    public int stageNumber = 1;
 
     public LevelManager(List<Level> newlevelList)
     {
@@ -19,12 +20,19 @@ public class LevelManager
 
     public void Update(GameTime gameTime, Vector2 playerPos)
     {
-        if (levelList[levelToPlay].isDone && levelToPlay < levelNumber - 1)
+        if (levelList[levelToPlay].isDone)
         {
+            System.Console.WriteLine("Level " + (levelToPlay + 1) + " Done!");
+            levelList[levelToPlay].Reset();
             levelToPlay++;
-            System.Console.WriteLine("LevelToPlay: " + levelToPlay);
         }
-
+        // If finish the last stage, reset from stage one but harder
+        if (levelToPlay == levelNumber)
+        {
+            levelToPlay = 0;
+            stageNumber ++;
+            System.Console.WriteLine("--- Reset Stage ---");
+        }
         if (levelList[levelToPlay].levelType == "WaveHorizontal")
         {
             WaveHorizontal waveHorizontal = (WaveHorizontal)levelList[levelToPlay];
@@ -50,6 +58,7 @@ public class LevelManager
     public void ResetLevels()
     {
         levelToPlay = 0;
+        stageNumber = 1;
         for (int i = 0; i < levelList.Count; i++)
         {
             levelList[i].Reset();

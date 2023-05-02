@@ -92,6 +92,8 @@ public class RockManager : Level
             {
                 walls[i].position = position + startPositions[i];
             }
+            speed += 100;
+            isDone = true;
         }
     }
 
@@ -167,6 +169,7 @@ public class RockManager : Level
     public override void Reset()
     {
         this.position = startingPosition;
+        numberOfRetracts = 6;
         for (int i = 0; i < walls.Length; i++)
         {
             walls[i].position = new Vector2(this.position.X + startPositions[i].X, this.position.Y + startPositions[i].Y);

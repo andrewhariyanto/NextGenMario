@@ -96,7 +96,7 @@ public class Game1 : Game
         waveVertical = new WaveVertical(new Vector2(0, -1000), 200f, 0, wallTextureWave_Vertical);
 
         // Initialize rock
-        rockManager = new RockManager(new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500, rockTexture, 8);
+        rockManager = new RockManager(new Vector2(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 500, rockTexture, 6);
 
         // Initialize Level Manager
         List<Level> levels = new List<Level>();
@@ -244,6 +244,7 @@ public class Game1 : Game
 
             _spriteBatch.DrawString(gameFont, "Player Health: " + player.health.ToString(), new Vector2(0, 0), Color.Chocolate);
             _spriteBatch.DrawString(gameFont, "Timer: " + timer.ToString("0.#"), new Vector2(WINDOW_WIDTH / 2, 0), Color.Chocolate);
+            _spriteBatch.DrawString(gameFont, "Stage: " + levelManager.stageNumber, new Vector2(WINDOW_WIDTH - 150, 0), Color.Chocolate);
         }
         else
         {
