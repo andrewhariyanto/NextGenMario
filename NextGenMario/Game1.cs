@@ -19,6 +19,7 @@ public class Game1 : Game
     Texture2D bulletTexture;
     Texture2D rockTexture;
     Texture2D obstacleTexture;
+    Texture2D ParticleTexture;
 
     // Declare window size
     const int WINDOW_WIDTH = 1280;
@@ -83,12 +84,14 @@ public class Game1 : Game
         bulletTextureList.Add(bulletTexture);
 
         // Initialize bulletManager
-        bulletManager = new BulletManager(bulletTextureList, 100);
+        bulletManager = new BulletManager(bulletTextureList, 200);
 
         // All wind obstacles texture
         List<Texture2D> obstacleTextureList = new List<Texture2D>();
         obstacleTexture = NewTexture(GraphicsDevice, 25, 25, Color.White);
         obstacleTextureList.Add(obstacleTexture);
+
+        ParticleTexture = NewTexture(GraphicsDevice, 3, 3, Color.White);
 
         
 
@@ -101,7 +104,7 @@ public class Game1 : Game
         };
 
         // Initialize windObstacle
-        windManager = new WindManager(obstacleTextureList, 100, player, 200);
+        windManager = new WindManager(obstacleTextureList, 150, player, 250, ParticleTexture);
 
         // Initialize the wave
         waveHorizontal = new WaveHorizontal(new Vector2(WINDOW_WIDTH, 100), 300f, 0, wallTextureWave);
@@ -159,11 +162,11 @@ public class Game1 : Game
             _environmentSprites.Add(obstacle);
         }
 
-        // // Add all obstalces to the environment list
-        // foreach (Sprite particle in windManager.windParticlesQ)
-        // {
-        //     _environmentSprites.Add(particle);
-        // }
+        // Add all obstalces to the environment list
+        foreach (Sprite particle in windManager.windParticlesQ)
+        {
+            _environmentSprites.Add(particle);
+        }
 
         // add all horizontal waves to environment list
         foreach (Sprite wave in waveHorizontal.getWalls())

@@ -39,11 +39,11 @@ public class WindParticle : Sprite
             }
             if (orientation == 3)
             {
-                position.Y += -1 * speed * deltaTime;
+                position.Y += 1 * speed * deltaTime;
             }
             if (orientation == 4)
             {
-                position.Y += 1 * speed * deltaTime;
+                position.Y += -1 * speed * deltaTime;
             }
         }
     }
